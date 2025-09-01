@@ -5,6 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import RequestForm from "@/components/RequestForm";
 import ResponsePanel from "@/components/ResponsePanel";
 import HistoryPanel from "@/components/HistoryPanel";
+import TerminalCommands from "@/components/TerminalCommands";
+import MonitoringDashboard from "@/components/MonitoringDashboard";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
+import RequestTemplates from "@/components/RequestTemplates";
+import MatrixBackground from "@/components/MatrixBackground";
+import HelpPanel from "@/components/HelpPanel";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 interface RequestData {
   url: string;
@@ -33,6 +41,30 @@ export default function Home() {
   const [response, setResponse] = useState<ResponseData | null>(null);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [showMonitor, setShowMonitor] = useState(false);
+  const [showTheme, setShowTheme] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const { playSuccess, playError, playClick } = useSoundEffects();
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    onSendRequest: () => {
+      // This would trigger the form submission
+      const form = document.querySelector("form");
+      if (form) form.requestSubmit();
+    },
+    onToggleTerminal: () => setShowTerminal(!showTerminal),
+    onToggleMonitor: () => setShowMonitor(!showMonitor),
+    onToggleTheme: () => setShowTheme(!showTheme),
+    onToggleTemplates: () => setShowTemplates(!showTemplates),
+    onClearHistory: () => {
+      setHistory([]);
+      setResponse(null);
+      playClick();
+    },
+  });
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -54,6 +86,7 @@ export default function Home() {
   const handleRequest = async (requestData: RequestData) => {
     setLoading(true);
     setResponse(null);
+    const startTime = Date.now();
 
     try {
       const res = await fetch("/api/proxy", {
@@ -65,9 +98,11 @@ export default function Home() {
       });
 
       const responseData = await res.json();
+      const responseTime = Date.now() - startTime;
 
       if (res.ok) {
         setResponse(responseData);
+        playSuccess();
 
         // Add to history
         const historyItem: HistoryItem = {
@@ -90,6 +125,7 @@ export default function Home() {
           url: requestData.url,
           type: "error",
         });
+        playError();
       }
     } catch (error) {
       setResponse({
@@ -103,6 +139,7 @@ export default function Home() {
         url: requestData.url,
         type: "error",
       });
+      playError();
     } finally {
       setLoading(false);
     }
@@ -110,11 +147,34 @@ export default function Home() {
 
   const handleHistorySelect = (item: HistoryItem) => {
     setResponse(item.response);
+    playClick();
+  };
+
+  const handleApplyTemplate = (template: any) => {
+    // This would be handled by the RequestForm component
+    playClick();
+  };
+
+  const handleTerminalCommand = (command: string) => {
+    playClick();
+    // Handle terminal commands
+    switch (command) {
+      case "clear":
+        setHistory([]);
+        setResponse(null);
+        break;
+      case "export":
+        // Export functionality
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <div className="min-h-screen crt-screen crt-flicker">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen crt-screen crt-flicker relative">
+      <MatrixBackground />
+      <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -138,7 +198,11 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-2"
           >
-            <RequestForm onSubmit={handleRequest} loading={loading} />
+            <RequestForm
+              onSubmit={handleRequest}
+              loading={loading}
+              onApplyTemplate={handleApplyTemplate}
+            />
           </motion.div>
 
           {/* History Panel */}
@@ -165,6 +229,26 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Floating Action Panels */}
+        <TerminalCommands onCommand={handleTerminalCommand} />
+        <MonitoringDashboard
+          isVisible={showMonitor}
+          onToggle={() => setShowMonitor(!showMonitor)}
+        />
+        <ThemeSwitcher
+          isVisible={showTheme}
+          onToggle={() => setShowTheme(!showTheme)}
+        />
+        <RequestTemplates
+          isVisible={showTemplates}
+          onToggle={() => setShowTemplates(!showTemplates)}
+          onApplyTemplate={handleApplyTemplate}
+        />
+        <HelpPanel
+          isVisible={showHelp}
+          onToggle={() => setShowHelp(!showHelp)}
+        />
       </div>
     </div>
   );

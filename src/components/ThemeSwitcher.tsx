@@ -1,0 +1,151 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const THEMES = {
+  classic: {
+    name: "CLASSIC GREEN",
+    background: "#0a0a0a",
+    foreground: "#00ff00",
+    accent: "#00ff41",
+    glow: "#00ff00",
+  },
+  amber: {
+    name: "AMBER TERMINAL",
+    background: "#1a1a1a",
+    foreground: "#ffb000",
+    accent: "#ffcc00",
+    glow: "#ffb000",
+  },
+  blue: {
+    name: "BLUE MATRIX",
+    background: "#000011",
+    foreground: "#00ffff",
+    accent: "#0080ff",
+    glow: "#00ffff",
+  },
+  red: {
+    name: "RED ALERT",
+    background: "#1a0000",
+    foreground: "#ff0000",
+    accent: "#ff4040",
+    glow: "#ff0000",
+  },
+  purple: {
+    name: "PURPLE HAZE",
+    background: "#0a0a1a",
+    foreground: "#ff00ff",
+    accent: "#cc00cc",
+    glow: "#ff00ff",
+  },
+};
+
+interface ThemeSwitcherProps {
+  isVisible: boolean;
+  onToggle: () => void;
+}
+
+export default function ThemeSwitcher({
+  isVisible,
+  onToggle,
+}: ThemeSwitcherProps) {
+  const [currentTheme, setCurrentTheme] =
+    useState<keyof typeof THEMES>("classic");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(
+      "retro-api-theme"
+    ) as keyof typeof THEMES;
+    if (savedTheme && THEMES[savedTheme]) {
+      setCurrentTheme(savedTheme);
+      applyTheme(THEMES[savedTheme]);
+    }
+  }, []);
+
+  const applyTheme = (theme: (typeof THEMES)[keyof typeof THEMES]) => {
+    const root = document.documentElement;
+    root.style.setProperty("--background", theme.background);
+    root.style.setProperty("--foreground", theme.foreground);
+    root.style.setProperty("--accent", theme.accent);
+    root.style.setProperty("--glow", theme.glow);
+  };
+
+  const handleThemeChange = (themeKey: keyof typeof THEMES) => {
+    setCurrentTheme(themeKey);
+    applyTheme(THEMES[themeKey]);
+    localStorage.setItem("retro-api-theme", themeKey);
+  };
+
+  return (
+    <>
+      {/* Toggle Button */}
+      <motion.button
+        onClick={onToggle}
+        className="fixed top-4 left-4 retro-button crt-glow z-50"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        THEME
+      </motion.button>
+
+      {/* Theme Panel */}
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            className="fixed top-20 left-4 w-64 retro-border crt-glow bg-black bg-opacity-90 z-40"
+          >
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="crt-text font-bold">THEME SELECTOR</h3>
+                <button
+                  onClick={onToggle}
+                  className="retro-button text-xs px-2"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                {Object.entries(THEMES).map(([key, theme]) => (
+                  <motion.button
+                    key={key}
+                    onClick={() =>
+                      handleThemeChange(key as keyof typeof THEMES)
+                    }
+                    className={`w-full p-3 retro-border text-left transition-all ${
+                      currentTheme === key ? "bg-green-500 bg-opacity-20" : ""
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-4 h-4 border-2"
+                        style={{
+                          backgroundColor: theme.background,
+                          borderColor: theme.foreground,
+                          boxShadow: `0 0 10px ${theme.glow}`,
+                        }}
+                      />
+                      <span className="crt-text text-sm">{theme.name}</span>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-green-500 border-opacity-20">
+                <p className="text-xs crt-text opacity-60 text-center">
+                  CURRENT: {THEMES[currentTheme].name}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

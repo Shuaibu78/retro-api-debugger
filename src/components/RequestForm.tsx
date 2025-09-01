@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 
 interface RequestData {
   url: string;
@@ -13,9 +14,14 @@ interface RequestData {
 interface RequestFormProps {
   onSubmit: (data: RequestData) => void;
   loading: boolean;
+  onApplyTemplate?: (template: any) => void;
 }
 
-export default function RequestForm({ onSubmit, loading }: RequestFormProps) {
+export default function RequestForm({
+  onSubmit,
+  loading,
+  onApplyTemplate,
+}: RequestFormProps) {
   const [url, setUrl] = useState(
     "https://jsonplaceholder.typicode.com/posts/1"
   );
@@ -25,6 +31,39 @@ export default function RequestForm({ onSubmit, loading }: RequestFormProps) {
   });
   const [body, setBody] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [urlSuggestions, setUrlSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const { playClick, playTyping } = useSoundEffects();
+  const urlInputRef = useRef<HTMLInputElement>(null);
+
+  // Common API endpoints for suggestions
+  const commonEndpoints = [
+    "https://jsonplaceholder.typicode.com/posts",
+    "https://jsonplaceholder.typicode.com/users",
+    "https://api.github.com/users",
+    "https://httpbin.org/get",
+    "https://httpbin.org/post",
+    "https://restcountries.com/v3.1/all",
+    "https://api.openweathermap.org/data/2.5/weather",
+  ];
+
+  useEffect(() => {
+    if (onApplyTemplate) {
+      // Listen for template application
+      const handleTemplateApply = (template: any) => {
+        setUrl(template.url);
+        setMethod(template.method);
+        setHeaders(template.headers);
+        setBody(template.body || "");
+        playClick();
+      };
+
+      // This would be connected via a custom event or context
+      window.addEventListener("applyTemplate", handleTemplateApply);
+      return () =>
+        window.removeEventListener("applyTemplate", handleTemplateApply);
+    }
+  }, [onApplyTemplate, playClick]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
