@@ -11,6 +11,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import RequestTemplates from "@/components/RequestTemplates";
 import MatrixBackground from "@/components/MatrixBackground";
 import HelpPanel from "@/components/HelpPanel";
+import CodeGenerator from "@/components/CodeGenerator";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
@@ -46,6 +47,10 @@ export default function Home() {
   const [showTheme, setShowTheme] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showCodeGenerator, setShowCodeGenerator] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState<RequestData | null>(
+    null
+  );
   const { playSuccess, playError, playClick } = useSoundEffects();
 
   // Keyboard shortcuts
@@ -59,6 +64,7 @@ export default function Home() {
     onToggleMonitor: () => setShowMonitor(!showMonitor),
     onToggleTheme: () => setShowTheme(!showTheme),
     onToggleTemplates: () => setShowTemplates(!showTemplates),
+    onToggleCodeGenerator: () => setShowCodeGenerator(!showCodeGenerator),
     onClearHistory: () => {
       setHistory([]);
       setResponse(null);
@@ -86,6 +92,7 @@ export default function Home() {
   const handleRequest = async (requestData: RequestData) => {
     setLoading(true);
     setResponse(null);
+    setCurrentRequest(requestData);
     const startTime = Date.now();
 
     try {
@@ -248,6 +255,12 @@ export default function Home() {
         <HelpPanel
           isVisible={showHelp}
           onToggle={() => setShowHelp(!showHelp)}
+        />
+        <CodeGenerator
+          isVisible={showCodeGenerator}
+          onToggle={() => setShowCodeGenerator(!showCodeGenerator)}
+          response={response}
+          request={currentRequest}
         />
       </div>
     </div>

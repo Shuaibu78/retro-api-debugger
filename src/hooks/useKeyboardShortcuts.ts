@@ -8,6 +8,7 @@ interface KeyboardShortcutsProps {
   onToggleMonitor: () => void;
   onToggleTheme: () => void;
   onToggleTemplates: () => void;
+  onToggleCodeGenerator: () => void;
   onClearHistory: () => void;
 }
 
@@ -17,6 +18,7 @@ export const useKeyboardShortcuts = ({
   onToggleMonitor,
   onToggleTheme,
   onToggleTemplates,
+  onToggleCodeGenerator,
   onClearHistory,
 }: KeyboardShortcutsProps) => {
   useEffect(() => {
@@ -64,6 +66,12 @@ export const useKeyboardShortcuts = ({
             onToggleTemplates();
           }
           break;
+        case "g":
+          if (isModifier) {
+            event.preventDefault();
+            onToggleCodeGenerator();
+          }
+          break;
         case "k":
           if (isModifier && shiftKey) {
             event.preventDefault();
@@ -85,6 +93,7 @@ export const useKeyboardShortcuts = ({
     onToggleMonitor,
     onToggleTheme,
     onToggleTemplates,
+    onToggleCodeGenerator,
     onClearHistory,
   ]);
 };

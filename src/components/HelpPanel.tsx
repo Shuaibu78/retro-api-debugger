@@ -14,6 +14,7 @@ export default function HelpPanel({ isVisible, onToggle }: HelpPanelProps) {
     { key: "Ctrl/Cmd + M", description: "Toggle monitor" },
     { key: "Ctrl/Cmd + H", description: "Toggle theme switcher" },
     { key: "Ctrl/Cmd + R", description: "Toggle templates" },
+    { key: "Ctrl/Cmd + G", description: "Toggle code generator" },
     { key: "Ctrl/Cmd + Shift + K", description: "Clear history" },
     { key: "Escape", description: "Close panels" },
   ];

@@ -18,13 +18,15 @@ A **retro-style API debugging tool** with CRT aesthetics, built with Next.js 14,
 ### 🎨 **Retro Aesthetic**
 - **VT323 Font**: Authentic monospace terminal font
 - **CRT Effects**: Animated scanlines, glowing text, and flicker effects
-- **Multiple Themes**: Classic Green, Amber Terminal, Blue Matrix, Red Alert, Purple Haze
+- **Multiple Themes**: 10 themes (5 dark + 5 light) with category switching
 - **Matrix Background**: Animated falling characters effect
+- **Light Mode Support**: Beautiful light themes for daytime use
 
 ### 🚀 **Advanced Features**
 - **Interactive Terminal**: Command-line interface with help, clear, history commands
 - **Real-time Monitoring**: API statistics dashboard with success rates and response times
 - **Request Templates**: Pre-built templates for common APIs (GitHub, JSONPlaceholder, etc.)
+- **Code Generator**: Convert API requests to code in 10+ languages (JavaScript, Python, cURL, etc.)
 - **Sound Effects**: Retro beep sounds for interactions and responses
 - **Keyboard Shortcuts**: Power user shortcuts for all major functions
 
@@ -43,6 +45,7 @@ A **retro-style API debugging tool** with CRT aesthetics, built with Next.js 14,
 | `Ctrl/Cmd + M` | Toggle monitor |
 | `Ctrl/Cmd + H` | Toggle theme switcher |
 | `Ctrl/Cmd + R` | Toggle templates |
+| `Ctrl/Cmd + G` | Toggle code generator |
 | `Ctrl/Cmd + Shift + K` | Clear history |
 | `Escape` | Close panels |
 
@@ -83,6 +86,13 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 3. Click any template to auto-fill the form
 4. Customize as needed and send
 
+### Generating Code
+1. Make an API request
+2. Click the **CODE** button (bottom-right)
+3. Select your preferred language
+4. Copy the generated code snippet
+5. Use in your projects instantly!
+
 ### Monitoring Performance
 1. Click the **MONITOR** button (top-right)
 2. View real-time statistics:
@@ -103,12 +113,21 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 🎨 **Themes**
 
-Switch between 5 retro themes:
+Switch between 10 retro themes organized by category:
+
+### Dark Themes
 - **Classic Green**: Original green-on-black terminal
 - **Amber Terminal**: Warm amber monochrome
 - **Blue Matrix**: Cool blue cyberpunk
 - **Red Alert**: High-contrast red warning
 - **Purple Haze**: Psychedelic purple
+
+### Light Themes
+- **Light Green**: Soft green on light background
+- **Light Blue**: Professional blue theme
+- **Light Amber**: Warm golden theme
+- **Light Purple**: Elegant purple theme
+- **Light Pink**: Gentle pink theme
 
 ## 🛠 **Technical Stack**
 
@@ -169,6 +188,12 @@ src/
 - Command-line interface
 - Command history
 - Real-time feedback
+
+### 6. **Code Generator**
+- Convert API requests to code in 10+ languages
+- Support for JavaScript, TypeScript, Python, cURL, PHP, Java, C#, Go, Rust, Swift
+- Automatic TypeScript interface generation
+- One-click copy to clipboard
 
 ## 🔧 **Customization**
 
@@ -235,11 +260,55 @@ docker run -p 3000:3000 retro-api-debugger
 
 ## 🤝 **Contributing**
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Start for Contributors
+
+1. **Fork the repository**
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/retro-api-debugger.git
+   cd retro-api-debugger
+   ```
+3. **Install dependencies**
+   ```bash
+   yarn install
+   ```
+4. **Start development server**
+   ```bash
+   yarn dev
+   ```
+5. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+6. **Make your changes and test them**
+7. **Commit your changes**
+   ```bash
+   git commit -m 'feat: add amazing feature'
+   ```
+8. **Push to your fork**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+9. **Open a Pull Request**
+
+### Types of Contributions
+
+- 🐛 **Bug fixes**
+- ✨ **New features** (themes, languages, tools)
+- 📚 **Documentation improvements**
+- 🎨 **UI/UX enhancements**
+- 🧪 **Tests and quality improvements**
+- 🌍 **Translations**
+
+### Development Guidelines
+
+- Follow our [Code of Conduct](.github/CODE_OF_CONDUCT.md)
+- Use TypeScript for all new code
+- Maintain the retro aesthetic
+- Test on multiple browsers and devices
+- Update documentation for new features
 
 ## 📄 **License**
 
@@ -251,6 +320,40 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **CRT Effects**: Inspired by retro terminal aesthetics
 - **Matrix Effect**: Inspired by The Matrix (1999)
 - **Sound Design**: Retro computer beep aesthetics
+- **Contributors**: Thanks to all contributors who help make this project better!
+
+## 🏆 **Contributors**
+
+<!-- This section will be automatically updated by GitHub -->
+<a href="https://github.com/YOUR_USERNAME/retro-api-debugger/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=YOUR_USERNAME/retro-api-debugger" />
+</a>
+
+## 📊 **Project Stats**
+
+![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/retro-api-debugger?style=social)
+![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/retro-api-debugger?style=social)
+![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/retro-api-debugger)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/YOUR_USERNAME/retro-api-debugger)
+![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/retro-api-debugger)
+
+## 🚀 **Roadmap**
+
+- [ ] **Plugin System**: Allow custom plugins and extensions
+- [ ] **Team Collaboration**: Share API collections with team members
+- [ ] **API Documentation**: Auto-generate API docs from requests
+- [ ] **GraphQL Support**: Enhanced GraphQL query builder
+- [ ] **WebSocket Testing**: Real-time WebSocket testing tools
+- [ ] **Performance Testing**: Load testing and performance metrics
+- [ ] **API Mocking**: Built-in API mocking capabilities
+- [ ] **Export/Import**: Export collections to Postman, Insomnia, etc.
+
+## 💬 **Community**
+
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/YOUR_USERNAME/retro-api-debugger/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/YOUR_USERNAME/retro-api-debugger/issues)
+- 💡 **Feature Requests**: [GitHub Issues](https://github.com/YOUR_USERNAME/retro-api-debugger/issues)
+- 📧 **Contact**: [Your Email](mailto:your.email@example.com)
 
 ---
 

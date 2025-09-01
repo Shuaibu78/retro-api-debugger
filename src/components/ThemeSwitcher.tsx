@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const THEMES = {
+  // Dark Themes
   classic: {
     name: "CLASSIC GREEN",
     background: "#0a0a0a",
     foreground: "#00ff00",
     accent: "#00ff41",
     glow: "#00ff00",
+    category: "dark",
   },
   amber: {
     name: "AMBER TERMINAL",
@@ -17,6 +19,7 @@ const THEMES = {
     foreground: "#ffb000",
     accent: "#ffcc00",
     glow: "#ffb000",
+    category: "dark",
   },
   blue: {
     name: "BLUE MATRIX",
@@ -24,6 +27,7 @@ const THEMES = {
     foreground: "#00ffff",
     accent: "#0080ff",
     glow: "#00ffff",
+    category: "dark",
   },
   red: {
     name: "RED ALERT",
@@ -31,6 +35,7 @@ const THEMES = {
     foreground: "#ff0000",
     accent: "#ff4040",
     glow: "#ff0000",
+    category: "dark",
   },
   purple: {
     name: "PURPLE HAZE",
@@ -38,6 +43,48 @@ const THEMES = {
     foreground: "#ff00ff",
     accent: "#cc00cc",
     glow: "#ff00ff",
+    category: "dark",
+  },
+  // Light Themes
+  lightGreen: {
+    name: "LIGHT GREEN",
+    background: "#f0fff0",
+    foreground: "#006400",
+    accent: "#228b22",
+    glow: "#006400",
+    category: "light",
+  },
+  lightBlue: {
+    name: "LIGHT BLUE",
+    background: "#f0f8ff",
+    foreground: "#000080",
+    accent: "#4169e1",
+    glow: "#000080",
+    category: "light",
+  },
+  lightAmber: {
+    name: "LIGHT AMBER",
+    background: "#fff8dc",
+    foreground: "#b8860b",
+    accent: "#daa520",
+    glow: "#b8860b",
+    category: "light",
+  },
+  lightPurple: {
+    name: "LIGHT PURPLE",
+    background: "#f8f0ff",
+    foreground: "#4b0082",
+    accent: "#8a2be2",
+    glow: "#4b0082",
+    category: "light",
+  },
+  lightPink: {
+    name: "LIGHT PINK",
+    background: "#fff0f5",
+    foreground: "#8b008b",
+    accent: "#ff1493",
+    glow: "#8b008b",
+    category: "light",
   },
 };
 
@@ -52,6 +99,9 @@ export default function ThemeSwitcher({
 }: ThemeSwitcherProps) {
   const [currentTheme, setCurrentTheme] =
     useState<keyof typeof THEMES>("classic");
+  const [selectedCategory, setSelectedCategory] = useState<"dark" | "light">(
+    "dark"
+  );
 
   useEffect(() => {
     const savedTheme = localStorage.getItem(
@@ -60,6 +110,7 @@ export default function ThemeSwitcher({
     if (savedTheme && THEMES[savedTheme]) {
       setCurrentTheme(savedTheme);
       applyTheme(THEMES[savedTheme]);
+      setSelectedCategory(THEMES[savedTheme].category);
     }
   }, []);
 
@@ -74,8 +125,16 @@ export default function ThemeSwitcher({
   const handleThemeChange = (themeKey: keyof typeof THEMES) => {
     setCurrentTheme(themeKey);
     applyTheme(THEMES[themeKey]);
+    setSelectedCategory(THEMES[themeKey].category);
     localStorage.setItem("retro-api-theme", themeKey);
   };
+
+  const darkThemes = Object.entries(THEMES).filter(
+    ([_, theme]) => theme.category === "dark"
+  );
+  const lightThemes = Object.entries(THEMES).filter(
+    ([_, theme]) => theme.category === "light"
+  );
 
   return (
     <>
@@ -109,32 +168,57 @@ export default function ThemeSwitcher({
                 </button>
               </div>
 
-              <div className="space-y-2">
-                {Object.entries(THEMES).map(([key, theme]) => (
-                  <motion.button
-                    key={key}
-                    onClick={() =>
-                      handleThemeChange(key as keyof typeof THEMES)
-                    }
-                    className={`w-full p-3 retro-border text-left transition-all ${
-                      currentTheme === key ? "bg-green-500 bg-opacity-20" : ""
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-4 h-4 border-2"
-                        style={{
-                          backgroundColor: theme.background,
-                          borderColor: theme.foreground,
-                          boxShadow: `0 0 10px ${theme.glow}`,
-                        }}
-                      />
-                      <span className="crt-text text-sm">{theme.name}</span>
-                    </div>
-                  </motion.button>
-                ))}
+              {/* Category Tabs */}
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setSelectedCategory("dark")}
+                  className={`retro-button text-xs flex-1 ${
+                    selectedCategory === "dark" ? "bg-green-500 text-black" : ""
+                  }`}
+                >
+                  DARK
+                </button>
+                <button
+                  onClick={() => setSelectedCategory("light")}
+                  className={`retro-button text-xs flex-1 ${
+                    selectedCategory === "light"
+                      ? "bg-green-500 text-black"
+                      : ""
+                  }`}
+                >
+                  LIGHT
+                </button>
+              </div>
+
+              {/* Themes */}
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {(selectedCategory === "dark" ? darkThemes : lightThemes).map(
+                  ([key, theme]) => (
+                    <motion.button
+                      key={key}
+                      onClick={() =>
+                        handleThemeChange(key as keyof typeof THEMES)
+                      }
+                      className={`w-full p-3 retro-border text-left transition-all ${
+                        currentTheme === key ? "bg-green-500 bg-opacity-20" : ""
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-4 h-4 border-2"
+                          style={{
+                            backgroundColor: theme.background,
+                            borderColor: theme.foreground,
+                            boxShadow: `0 0 10px ${theme.glow}`,
+                          }}
+                        />
+                        <span className="crt-text text-sm">{theme.name}</span>
+                      </div>
+                    </motion.button>
+                  )
+                )}
               </div>
 
               <div className="mt-4 pt-4 border-t border-green-500 border-opacity-20">
